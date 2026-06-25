@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Djayanti';
+  src: url('/fonts/Djayanti-Demo.otf') format('opentype'),
+       url('/fonts/Djayanti-Demo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

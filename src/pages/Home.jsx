@@ -56,7 +56,7 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <div className="px-4 pt-12 pb-4">
         <div className="flex items-baseline justify-between mb-4">
-          <h1 className="text-2xl font-bold tracking-tight">Makan Makan</h1>
+          <h1 className="text-2xl font-djayanti tracking-tight">Makan Makan</h1>
           <span className="text-sm text-gray-400">
             {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
           </span>
