@@ -6,6 +6,11 @@ import IngredientList from "./IngredientList.jsx";
 import InstructionList from "./InstructionList.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
 
+const CARD_COLORS = [
+  '#2a4a3a', '#344a30', '#2e4840', '#223a2c', '#2e4a36',
+  '#3a5640', '#364238', '#2a4840', '#3a4830', '#2c4e3c',
+];
+
 const EMPTY = {
   name: "",
   description: "",
@@ -22,13 +27,18 @@ const EMPTY = {
   source_attribution: "",
 };
 
-const inp =
-  "w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400 transition-colors bg-white";
+const inputStyle = {
+  width: '100%', boxSizing: 'border-box',
+  padding: '10px 12px',
+  background: '#ffffff', border: '1px solid #d4cdc0',
+  borderRadius: '10px', fontSize: '14px',
+  outline: 'none', color: '#3a3226',
+};
 
 function Field({ label, children }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">
+      <label style={{ display: 'block', fontSize: '11px', fontWeight: 500, color: '#9a9080', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
         {label}
       </label>
       {children}
@@ -36,11 +46,7 @@ function Field({ label, children }) {
   );
 }
 
-export default function RecipeForm({
-  title,
-  initialData = {},
-  sourceType = "manual",
-}) {
+export default function RecipeForm({ title, initialData = {}, sourceType = "manual" }) {
   const navigate = useNavigate();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...initialData }));
   const [saving, setSaving] = useState(false);
@@ -73,6 +79,7 @@ export default function RecipeForm({
       recipe_instructions: form.recipe_instructions || [],
       source_attribution: form.source_attribution || null,
       source_type: sourceType,
+      card_color: CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)],
     };
 
     const { error: dbError } = await supabase.from("recipes").insert(payload);
@@ -86,23 +93,23 @@ export default function RecipeForm({
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="px-4 pt-12 pb-32">
+    <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
+      <div style={{ padding: '52px 16px 120px' }}>
         <button
           onClick={() => navigate(-1)}
-          className="text-sm text-gray-500 mb-6 flex items-center gap-1"
+          style={{ fontSize: '13px', color: '#6a5e48', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' }}
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-bold mb-6">{title}</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#3a3226', marginBottom: '24px' }}>{title}</h1>
 
-        <div className="space-y-5">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Field label="Recipe name *">
             <input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
               placeholder="e.g. Nasi Lemak"
-              className={inp}
+              style={inputStyle}
             />
           </Field>
 
@@ -111,18 +118,18 @@ export default function RecipeForm({
               value={form.description || ""}
               onChange={(e) => set("description", e.target.value)}
               rows={3}
-              className={`${inp} resize-none`}
+              style={{ ...inputStyle, resize: 'none' }}
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <Field label="Prep time (min)">
               <input
                 type="number"
                 min="0"
                 value={form.prep_time || ""}
                 onChange={(e) => set("prep_time", e.target.value)}
-                className={inp}
+                style={inputStyle}
               />
             </Field>
             <Field label="Cook time (min)">
@@ -131,7 +138,7 @@ export default function RecipeForm({
                 min="0"
                 value={form.cook_time || ""}
                 onChange={(e) => set("cook_time", e.target.value)}
-                className={inp}
+                style={inputStyle}
               />
             </Field>
           </div>
@@ -141,17 +148,17 @@ export default function RecipeForm({
               value={form.recipe_yield || ""}
               onChange={(e) => set("recipe_yield", e.target.value)}
               placeholder="e.g. 4 servings"
-              className={inp}
+              style={inputStyle}
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <Field label="Category">
               <input
                 value={form.recipe_category || ""}
                 onChange={(e) => set("recipe_category", e.target.value)}
                 placeholder="e.g. main"
-                className={inp}
+                style={inputStyle}
               />
             </Field>
             <Field label="Cuisine">
@@ -159,7 +166,7 @@ export default function RecipeForm({
                 value={form.recipe_cuisine || ""}
                 onChange={(e) => set("recipe_cuisine", e.target.value)}
                 placeholder="e.g. Malaysian"
-                className={inp}
+                style={inputStyle}
               />
             </Field>
           </div>
@@ -169,7 +176,7 @@ export default function RecipeForm({
               value={form.cooking_method || ""}
               onChange={(e) => set("cooking_method", e.target.value)}
               placeholder="e.g. Baking"
-              className={inp}
+              style={inputStyle}
             />
           </Field>
 
@@ -208,27 +215,35 @@ export default function RecipeForm({
               value={form.source_attribution || ""}
               onChange={(e) => set("source_attribution", e.target.value)}
               placeholder="e.g. Ottolenghi Simple p.42"
-              className={inp}
+              style={inputStyle}
             />
           </Field>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && (
+            <p style={{ fontSize: '13px', color: '#c0392b' }}>{error}</p>
+          )}
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 px-4 pb-8 pt-4 bg-white border-t border-gray-100">
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        padding: '12px 16px 32px',
+        background: '#e8e2d6', borderTop: '1px solid #d4cdc0',
+      }}>
         <button
           onClick={save}
           disabled={saving}
-          className="w-full py-3.5 bg-gray-900 text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+          style={{
+            width: '100%', padding: '14px',
+            background: '#2e4a38', color: '#d8ead4',
+            border: 'none', borderRadius: '10px',
+            fontSize: '15px', fontWeight: 500,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            cursor: saving ? 'not-allowed' : 'pointer',
+            opacity: saving ? 0.6 : 1,
+          }}
         >
-          {saving ? (
-            <>
-              <LoadingSpinner small /> Saving…
-            </>
-          ) : (
-            "Save recipe"
-          )}
+          {saving ? <><LoadingSpinner small /> Saving…</> : "Save recipe"}
         </button>
       </div>
     </div>

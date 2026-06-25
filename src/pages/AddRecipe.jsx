@@ -49,9 +49,7 @@ export default function AddRecipe() {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      navigate("/add/review", {
-        state: { recipe: data, sourceType },
-      });
+      navigate("/add/review", { state: { recipe: data, sourceType } });
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -61,36 +59,33 @@ export default function AddRecipe() {
 
   if (preview) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="px-4 pt-12 pb-8">
+      <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
+        <div style={{ padding: '52px 16px 32px' }}>
           <button
             onClick={() => { setPreview(null); setImageData(null); }}
-            className="text-sm text-gray-500 mb-6 flex items-center gap-1"
+            style={{ fontSize: '13px', color: '#6a5e48', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' }}
           >
             ← Back
           </button>
-          <img
-            src={preview}
-            alt="Recipe"
-            className="w-full rounded-2xl object-cover max-h-80 mb-6"
-          />
+          <img src={preview} alt="Recipe" style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', maxHeight: '320px', marginBottom: '20px' }} />
           {error && (
-            <p className="text-red-500 text-sm mb-4 p-3 bg-red-50 rounded-xl">
+            <p style={{ fontSize: '13px', color: '#c0392b', marginBottom: '16px', padding: '12px', background: 'rgba(192,57,43,0.08)', borderRadius: '8px' }}>
               {error}
             </p>
           )}
           <button
             onClick={extractRecipe}
             disabled={loading}
-            className="w-full py-3.5 bg-gray-900 text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+            style={{
+              width: '100%', padding: '14px',
+              background: '#2e4a38', color: '#d8ead4',
+              border: 'none', borderRadius: '10px',
+              fontSize: '15px', fontWeight: 500,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
+            }}
           >
-            {loading ? (
-              <>
-                <LoadingSpinner small /> Reading recipe…
-              </>
-            ) : (
-              "Extract recipe →"
-            )}
+            {loading ? <><LoadingSpinner small /> Reading recipe…</> : "Extract recipe →"}
           </button>
         </div>
       </div>
@@ -98,69 +93,41 @@ export default function AddRecipe() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="px-4 pt-12 pb-8">
+    <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
+      <div style={{ padding: '52px 16px 32px' }}>
         <button
           onClick={() => navigate("/")}
-          className="text-sm text-gray-500 mb-6 flex items-center gap-1"
+          style={{ fontSize: '13px', color: '#6a5e48', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' }}
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-bold mb-2">Add recipe</h1>
-        <p className="text-gray-400 text-sm mb-8">
-          Choose how you'd like to add a recipe
-        </p>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#3a3226', marginBottom: '6px' }}>Add recipe</h1>
+        <p style={{ fontSize: '14px', color: '#9a9080', marginBottom: '28px' }}>Choose how you'd like to add a recipe</p>
 
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => cameraRef.current.click()}
-            className="w-full p-5 border border-gray-100 rounded-2xl text-left hover:bg-gray-50 active:bg-gray-50 transition-colors"
-          >
-            <div className="text-2xl mb-2">📷</div>
-            <div className="font-semibold">Take a photo</div>
-            <div className="text-sm text-gray-400 mt-1">
-              Photograph a recipe from a book or card
-            </div>
-          </button>
-
-          <button
-            onClick={() => uploadRef.current.click()}
-            className="w-full p-5 border border-gray-100 rounded-2xl text-left hover:bg-gray-50 active:bg-gray-50 transition-colors"
-          >
-            <div className="text-2xl mb-2">🖼️</div>
-            <div className="font-semibold">Upload screenshot</div>
-            <div className="text-sm text-gray-400 mt-1">
-              Upload a screenshot from a website or app
-            </div>
-          </button>
-
-          <button
-            onClick={() => navigate("/add/manual")}
-            className="w-full p-5 border border-gray-100 rounded-2xl text-left hover:bg-gray-50 active:bg-gray-50 transition-colors"
-          >
-            <div className="text-2xl mb-2">✏️</div>
-            <div className="font-semibold">Enter manually</div>
-            <div className="text-sm text-gray-400 mt-1">
-              Type in a recipe from scratch
-            </div>
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {[
+            { icon: '📷', label: 'Take a photo', sub: 'Photograph a recipe from a book or card', onClick: () => cameraRef.current.click() },
+            { icon: '🖼️', label: 'Upload screenshot', sub: 'Upload a screenshot from a website or app', onClick: () => uploadRef.current.click() },
+            { icon: '✏️', label: 'Enter manually', sub: 'Type in a recipe from scratch', onClick: () => navigate("/add/manual") },
+          ].map(({ icon, label, sub, onClick }) => (
+            <button
+              key={label}
+              onClick={onClick}
+              style={{
+                width: '100%', padding: '16px',
+                background: '#ffffff', border: '1px solid #d4cdc0',
+                borderRadius: '10px', textAlign: 'left', cursor: 'pointer',
+              }}
+            >
+              <div style={{ fontSize: '22px', marginBottom: '6px' }}>{icon}</div>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#3a3226' }}>{label}</div>
+              <div style={{ fontSize: '13px', color: '#9a9080', marginTop: '3px' }}>{sub}</div>
+            </button>
+          ))}
         </div>
 
-        <input
-          ref={cameraRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          className="hidden"
-          onChange={(e) => handleFile(e.target.files[0], "photo")}
-        />
-        <input
-          ref={uploadRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => handleFile(e.target.files[0], "screenshot")}
-        />
+        <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => handleFile(e.target.files[0], "photo")} />
+        <input ref={uploadRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleFile(e.target.files[0], "screenshot")} />
       </div>
     </div>
   );
