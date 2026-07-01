@@ -21,17 +21,27 @@ export default function TagInput({ value = [], onChange, placeholder }) {
   }
 
   return (
-    <div className="min-h-[44px] w-full border border-gray-200 rounded-xl px-3 py-2 flex flex-wrap gap-1.5 focus-within:border-gray-400 transition-colors">
+    <div style={{
+      minHeight: '44px', width: '100%', boxSizing: 'border-box',
+      border: '1px solid #d4cdc0', borderRadius: '10px',
+      padding: '6px 10px', display: 'flex', flexWrap: 'wrap', gap: '6px',
+      background: '#ffffff', cursor: 'text',
+    }}>
       {value.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 text-sm px-2.5 py-0.5 rounded-full"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '4px',
+            background: 'rgba(46,74,56,0.08)', color: '#3a3226',
+            fontSize: '13px', padding: '2px 10px', borderRadius: '20px',
+            border: '1px solid #d4cdc0',
+          }}
         >
           {tag}
           <button
             type="button"
             onClick={() => onChange(value.filter((t) => t !== tag))}
-            className="text-gray-400 hover:text-gray-600 leading-none"
+            style={{ color: '#9a9080', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: '15px', lineHeight: 1 }}
           >
             ×
           </button>
@@ -43,7 +53,11 @@ export default function TagInput({ value = [], onChange, placeholder }) {
         onKeyDown={handleKeyDown}
         onBlur={() => input && addTag(input)}
         placeholder={value.length === 0 ? placeholder : ""}
-        className="flex-1 min-w-[100px] outline-none text-sm bg-transparent"
+        style={{
+          flex: 1, minWidth: '100px', outline: 'none',
+          fontSize: '14px', background: 'transparent',
+          border: 'none', color: '#3a3226', padding: '2px 0',
+        }}
       />
     </div>
   );

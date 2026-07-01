@@ -1,3 +1,14 @@
+const inputBase = {
+  padding: '8px 10px',
+  background: '#ffffff',
+  border: '1px solid #d4cdc0',
+  borderRadius: '10px',
+  fontSize: '14px',
+  outline: 'none',
+  color: '#3a3226',
+  minWidth: 0,
+};
+
 export default function IngredientList({ value = [], onChange }) {
   function update(index, field, val) {
     onChange(value.map((item, i) => (i === index ? { ...item, [field]: val } : item)));
@@ -12,31 +23,31 @@ export default function IngredientList({ value = [], onChange }) {
   }
 
   return (
-    <div className="space-y-2">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {value.map((ing, i) => (
-        <div key={i} className="flex gap-2 items-center">
+        <div key={i} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           <input
             value={ing.amount}
             onChange={(e) => update(i, "amount", e.target.value)}
             placeholder="Qty"
-            className="w-14 px-2 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400 text-center"
+            style={{ ...inputBase, width: '52px', flexShrink: 0, textAlign: 'center' }}
           />
           <input
             value={ing.unit}
             onChange={(e) => update(i, "unit", e.target.value)}
             placeholder="Unit"
-            className="w-18 px-2 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400"
+            style={{ ...inputBase, width: '90px', flexShrink: 0 }}
           />
           <input
             value={ing.name}
             onChange={(e) => update(i, "name", e.target.value)}
             placeholder="Ingredient"
-            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400"
+            style={{ ...inputBase, flex: 1 }}
           />
           <button
             type="button"
             onClick={() => remove(i)}
-            className="text-gray-300 hover:text-gray-500 text-xl leading-none flex-shrink-0 w-6 text-center"
+            style={{ flexShrink: 0, width: '24px', fontSize: '18px', lineHeight: 1, color: '#c0b8ac', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
           >
             ×
           </button>
@@ -45,7 +56,7 @@ export default function IngredientList({ value = [], onChange }) {
       <button
         type="button"
         onClick={add}
-        className="text-sm text-gray-400 hover:text-gray-600 pt-1"
+        style={{ fontSize: '13px', color: '#9a9080', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textAlign: 'left' }}
       >
         + Add ingredient
       </button>

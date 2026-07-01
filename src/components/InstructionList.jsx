@@ -16,10 +16,16 @@ export default function InstructionList({ value = [], onChange }) {
   }
 
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {value.map((step, i) => (
-        <div key={i} className="flex gap-3 items-start">
-          <span className="flex-shrink-0 w-6 h-6 bg-gray-900 text-white text-xs rounded-full flex items-center justify-center mt-2.5 font-medium">
+        <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+          <span style={{
+            flexShrink: 0, width: '24px', height: '24px',
+            background: '#2e4a38', color: '#d8ead4',
+            fontSize: '11px', borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 500, marginTop: '10px',
+          }}>
             {step.position}
           </span>
           <textarea
@@ -27,12 +33,18 @@ export default function InstructionList({ value = [], onChange }) {
             onChange={(e) => update(i, e.target.value)}
             placeholder={`Step ${step.position}`}
             rows={2}
-            className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400 resize-none"
+            style={{
+              flex: 1, minWidth: 0, padding: '8px 10px',
+              background: '#ffffff', border: '1px solid #d4cdc0',
+              borderRadius: '10px', fontSize: '14px',
+              outline: 'none', color: '#3a3226',
+              resize: 'none', fontFamily: 'inherit',
+            }}
           />
           <button
             type="button"
             onClick={() => remove(i)}
-            className="text-gray-300 hover:text-gray-500 text-xl leading-none mt-2.5 flex-shrink-0"
+            style={{ flexShrink: 0, fontSize: '18px', lineHeight: 1, color: '#c0b8ac', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginTop: '10px' }}
           >
             ×
           </button>
@@ -41,7 +53,7 @@ export default function InstructionList({ value = [], onChange }) {
       <button
         type="button"
         onClick={add}
-        className="text-sm text-gray-400 hover:text-gray-600 pt-1"
+        style={{ fontSize: '13px', color: '#9a9080', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textAlign: 'left' }}
       >
         + Add step
       </button>
