@@ -69,12 +69,20 @@ export default function RecipeView() {
         }} />
 
         <div style={{ position: 'relative' }}>
-          <button
-            onClick={() => navigate("/")}
-            style={{ fontSize: '13px', color: 'rgba(200,230,200,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}
-          >
-            ← Back
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <button
+              onClick={() => navigate("/")}
+              style={{ fontSize: '13px', color: 'rgba(200,230,200,0.7)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={() => navigate(`/recipe/${id}/edit`)}
+              style={{ fontSize: '13px', color: 'rgba(200,230,200,0.7)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', padding: '5px 12px' }}
+            >
+              Edit
+            </button>
+          </div>
           {recipe.recipe_cuisine && (
             <p style={{ fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(200,230,200,0.5)', marginBottom: '6px' }}>
               {recipe.recipe_cuisine}

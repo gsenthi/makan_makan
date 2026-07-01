@@ -46,7 +46,7 @@ function Field({ label, children }) {
   );
 }
 
-export default function RecipeForm({ title, initialData = {}, sourceType = "manual" }) {
+export default function RecipeForm({ title, initialData = {}, sourceType = "manual", id = null }) {
   const navigate = useNavigate();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...initialData }));
   const [saving, setSaving] = useState(false);
@@ -78,18 +78,25 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
       recipe_ingredient: form.recipe_ingredient || [],
       recipe_instructions: form.recipe_instructions || [],
       source_attribution: form.source_attribution || null,
-      source_type: sourceType,
-      card_color: CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)],
     };
 
-    const { error: dbError } = await supabase.from("recipes").insert(payload);
+    let dbError;
+    if (id) {
+      ({ error: dbError } = await supabase.from("recipes").update(payload).eq("id", id));
+    } else {
+      ({ error: dbError } = await supabase.from("recipes").insert({
+        ...payload,
+        source_type: sourceType,
+        card_color: CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)],
+      }));
+    }
     setSaving(false);
 
     if (dbError) {
       setError(dbError.message);
       return;
     }
-    navigate("/");
+    navigate(id ? `/recipe/${id}` : "/");
   }
 
   return (
@@ -243,7 +250,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
             opacity: saving ? 0.6 : 1,
           }}
         >
-          {saving ? <><LoadingSpinner small /> Saving…</> : "Save recipe"}
+          {saving ? <><LoadingSpinner small /> Saving…</> : id ? "Save changes" : "Save recipe"}
         </button>
       </div>
     </div>
