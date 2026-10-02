@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import RecipeCard from "../components/RecipeCard.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { BasketIcon, CheckIcon } from "../components/Icons.jsx";
 
-export default function Home() {
+export default function Home({ basket, setBasket }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+  const [selectMode, setSelectMode] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +30,10 @@ export default function Home() {
   const categories = [...new Set(recipes.map((r) => r.recipe_category).filter(Boolean))];
   const cuisines = [...new Set(recipes.map((r) => r.recipe_cuisine).filter(Boolean))];
   const filters = ["All", ...categories, ...cuisines];
+
+  function toggleInBasket(id) {
+    setBasket((b) => (b.includes(id) ? b.filter((x) => x !== id) : [...b, id]));
+  }
   const cuisineCount = new Set(recipes.map((r) => r.recipe_cuisine).filter(Boolean)).size;
 
   const filtered = recipes.filter((r) => {
@@ -68,9 +74,43 @@ export default function Home() {
         }} />
 
         <div style={{ position: 'relative' }}>
-          <p style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,230,200,0.45)', marginBottom: '8px' }}>
-            our recipes
-          </p>
+          <div className="flex items-start justify-between">
+            <p style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,230,200,0.45)', marginBottom: '8px' }}>
+              our recipes
+            </p>
+            <div className="flex items-center gap-1" style={{ marginTop: '-10px', marginRight: '-8px' }}>
+              <button
+                onClick={() => setSelectMode((m) => !m)}
+                aria-pressed={selectMode}
+                className="px-2 py-2"
+                style={{ fontSize: '10px', color: 'rgba(200,230,200,0.6)', letterSpacing: '0.06em', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                {selectMode ? "Done" : "Select"}
+              </button>
+              <button
+                onClick={() => navigate("/basket")}
+                aria-label={`Basket, ${basket.length} ${basket.length === 1 ? 'recipe' : 'recipes'}`}
+                className="relative flex items-center justify-center"
+                style={{
+                  width: '36px', height: '36px', fontSize: '20px', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                  color: basket.length > 0 ? '#d8ead4' : 'rgba(200,230,200,0.5)',
+                }}
+              >
+                <BasketIcon />
+                {basket.length > 0 && (
+                  <span
+                    className="absolute flex items-center justify-center"
+                    style={{
+                      top: '3px', right: '1px', width: '16px', height: '16px', borderRadius: '50%',
+                      background: '#d8ead4', color: '#2e4a38', fontSize: '9px', fontWeight: 600, lineHeight: 1,
+                    }}
+                  >
+                    {basket.length}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
           <h1 style={{ fontFamily: 'Djayanti, serif', fontSize: '44px', color: '#d8ead4', lineHeight: 0.9, margin: 0 }}>
             makan<br />makan
           </h1>
@@ -109,6 +149,14 @@ export default function Home() {
         <rect y="50" width="100%" height="2" fill="rgba(80,55,20,0.12)" />
         <rect width="100%" height="52" fill="rgba(80,55,20,0.05)" />
       </svg>
+
+      {/* ── Selection bar ───────────────────────────────── */}
+      {selectMode && (
+        <div className="flex items-center justify-between" style={{ background: '#2e4a38', padding: '6px 16px' }}>
+          <span style={{ fontSize: '9px', color: 'rgba(200,230,200,0.6)' }}>Tap recipes to add to your basket</span>
+          <span style={{ fontSize: '9px', color: '#d8ead4', fontWeight: 500 }}>{basket.length} in basket</span>
+        </div>
+      )}
 
       {/* ── Search + filters ────────────────────────────── */}
       <div style={{ padding: '16px 16px 12px' }}>
@@ -177,14 +225,31 @@ export default function Home() {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            {filtered.map((recipe, i) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                index={i}
-                onClick={() => navigate(`/recipe/${recipe.id}`)}
-              />
-            ))}
+            {filtered.map((recipe, i) => {
+              const inBasket = basket.includes(recipe.id);
+              return (
+                <div
+                  key={recipe.id}
+                  className="relative"
+                  style={{ borderRadius: '6px', outline: inBasket ? '2px solid #d8ead4' : 'none' }}
+                >
+                  <RecipeCard
+                    recipe={recipe}
+                    index={i}
+                    onClick={() => (selectMode ? toggleInBasket(recipe.id) : navigate(`/recipe/${recipe.id}`))}
+                  />
+                  {inBasket && (
+                    <span
+                      aria-label="In basket"
+                      className="absolute flex items-center justify-center pointer-events-none"
+                      style={{ top: '6px', right: '6px', width: '14px', height: '14px', borderRadius: '50%', background: '#d8ead4', color: '#2e4a38', fontSize: '10px' }}
+                    >
+                      <CheckIcon strokeWidth={3} />
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
