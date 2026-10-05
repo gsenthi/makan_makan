@@ -33,7 +33,7 @@ export default function IngredientList({ value = [], onChange }) {
             placeholder="Qty"
             aria-label="Quantity"
             className="bh-input"
-            style={{ width: '52px', flexShrink: 0, textAlign: 'center', minWidth: 0 }}
+            style={{ width: '64px', flexShrink: 0, textAlign: 'center', minWidth: 0, paddingLeft: '4px', paddingRight: '4px' }}
           />
           <input
             value={ing.unit}
@@ -41,7 +41,7 @@ export default function IngredientList({ value = [], onChange }) {
             placeholder="Unit"
             aria-label="Unit"
             className="bh-input"
-            style={{ width: '72px', flexShrink: 0, minWidth: 0 }}
+            style={{ width: '68px', flexShrink: 0, minWidth: 0, paddingLeft: '8px', paddingRight: '6px' }}
           />
           <input
             value={ing.name}

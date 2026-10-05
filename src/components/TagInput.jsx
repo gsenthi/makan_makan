@@ -57,7 +57,7 @@ export default function TagInput({ value = [], onChange, placeholder }) {
         placeholder={value.length === 0 ? placeholder : ""}
         style={{
           flex: 1, minWidth: '100px', outline: 'none',
-          fontSize: '12px', background: 'transparent',
+          fontSize: '16px', background: 'transparent',
           border: 'none', color: C.ink, padding: '2px 0',
         }}
       />

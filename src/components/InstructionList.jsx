@@ -34,7 +34,7 @@ export default function InstructionList({ value = [], onChange }) {
             onChange={(e) => update(i, e.target.value)}
             placeholder={`Step ${step.position}`}
             aria-label={`Step ${step.position}`}
-            rows={2}
+            rows={3}
             className="bh-input"
             style={{ flex: 1, minWidth: 0, width: 'auto', resize: 'none' }}
           />

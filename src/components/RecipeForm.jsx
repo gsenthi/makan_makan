@@ -114,7 +114,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
             <textarea
               value={form.description || ""}
               onChange={(e) => set("description", e.target.value)}
-              rows={3}
+              rows={4}
               className="bh-input" style={{ resize: 'none' }}
             />
           </Field>
