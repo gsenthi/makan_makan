@@ -1,8 +1,24 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { C, BORDER, backButtonStyle as BACK_BTN, pageTitleStyle, errorStyle } from "../components/Bauhaus.jsx";
 
-const BACK_BTN = { fontSize: '13px', color: '#6a5e48', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' };
+const subtitleStyle = { fontSize: '11px', color: C.grey, margin: '0 0 20px' };
+
+// Itten's three forms (plus an ink square) stand in for the option icons.
+function Shape({ kind }) {
+  const base = { width: '18px', height: '18px', boxSizing: 'border-box', border: BORDER };
+  if (kind === 'circle') return <span aria-hidden style={{ ...base, display: 'block', borderRadius: '50%', background: C.red }} />;
+  if (kind === 'square') return <span aria-hidden style={{ ...base, display: 'block', background: C.yellow }} />;
+  if (kind === 'triangle') {
+    return (
+      <svg aria-hidden width="20" height="18" viewBox="0 0 20 18" style={{ display: 'block' }}>
+        <polygon points="10,1.5 18.5,16.8 1.5,16.8" fill="var(--bh-blue)" stroke="var(--bh-ink)" strokeWidth="2" strokeLinejoin="miter" />
+      </svg>
+    );
+  }
+  return <span aria-hidden style={{ ...base, display: 'block', background: C.ink }} />;
+}
 
 function compressImage(file, maxDimension = 1600) {
   return new Promise((resolve) => {
@@ -82,13 +98,13 @@ export default function AddRecipe() {
 
   if (urlMode) {
     return (
-      <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
-        <div style={{ padding: '52px 16px 32px' }}>
+      <div style={{ minHeight: '100vh', background: C.paper }}>
+        <div style={{ padding: '24px 16px 32px' }}>
           <button onClick={() => { setUrlMode(false); setError(null); setUrl(""); }} style={BACK_BTN}>
             ← Back
           </button>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#3a3226', marginBottom: '6px' }}>Add from URL</h1>
-          <p style={{ fontSize: '14px', color: '#9a9080', marginBottom: '24px' }}>Paste a link to a recipe page</p>
+          <h1 style={pageTitleStyle}>Add from URL</h1>
+          <p style={subtitleStyle}>Paste a link to a recipe page</p>
           <input
             type="url"
             value={url}
@@ -96,33 +112,22 @@ export default function AddRecipe() {
             onKeyDown={(e) => e.key === "Enter" && !loading && url && extractFromUrl()}
             placeholder="https://..."
             autoFocus
-            style={{
-              width: '100%', padding: '14px',
-              background: '#ffffff', border: '1px solid #d4cdc0',
-              borderRadius: '10px', fontSize: '15px', color: '#3a3226',
-              boxSizing: 'border-box', marginBottom: '12px',
-              outline: 'none',
-            }}
+            aria-label="Recipe URL"
+            className="bh-input"
+            style={{ marginBottom: '12px' }}
           />
           {error && (
-            <p style={{ fontSize: '13px', color: '#c0392b', marginBottom: '16px', padding: '12px', background: 'rgba(192,57,43,0.08)', borderRadius: '8px' }}>
+            <p style={errorStyle}>
               {error}
             </p>
           )}
           <button
             onClick={extractFromUrl}
             disabled={loading || !url}
-            style={{
-              width: '100%', padding: '14px',
-              background: '#2e4a38', color: '#d8ead4',
-              border: 'none', borderRadius: '10px',
-              fontSize: '15px', fontWeight: 500,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-              cursor: (loading || !url) ? 'not-allowed' : 'pointer',
-              opacity: (loading || !url) ? 0.6 : 1,
-            }}
+            className="bh-btn bh-btn-primary"
+            style={{ width: '100%' }}
           >
-            {loading ? <><LoadingSpinner small /> Scraping recipe…</> : "Extract recipe →"}
+            {loading ? <><LoadingSpinner small light /> Scraping recipe…</> : "Extract recipe →"}
           </button>
         </div>
       </div>
@@ -131,33 +136,27 @@ export default function AddRecipe() {
 
   if (preview) {
     return (
-      <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
-        <div style={{ padding: '52px 16px 32px' }}>
+      <div style={{ minHeight: '100vh', background: C.paper }}>
+        <div style={{ padding: '24px 16px 32px' }}>
           <button
             onClick={() => { setPreview(null); setImageData(null); }}
             style={BACK_BTN}
           >
             ← Back
           </button>
-          <img src={preview} alt="Recipe" style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', maxHeight: '320px', marginBottom: '20px' }} />
+          <img src={preview} alt="Recipe" style={{ display: 'block', width: '100%', boxSizing: 'border-box', border: BORDER, objectFit: 'cover', maxHeight: '320px', marginBottom: '20px' }} />
           {error && (
-            <p style={{ fontSize: '13px', color: '#c0392b', marginBottom: '16px', padding: '12px', background: 'rgba(192,57,43,0.08)', borderRadius: '8px' }}>
+            <p style={errorStyle}>
               {error}
             </p>
           )}
           <button
             onClick={extractRecipe}
             disabled={loading}
-            style={{
-              width: '100%', padding: '14px',
-              background: '#2e4a38', color: '#d8ead4',
-              border: 'none', borderRadius: '10px',
-              fontSize: '15px', fontWeight: 500,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
-            }}
+            className="bh-btn bh-btn-primary"
+            style={{ width: '100%' }}
           >
-            {loading ? <><LoadingSpinner small /> Reading recipe…</> : "Extract recipe →"}
+            {loading ? <><LoadingSpinner small light /> Reading recipe…</> : "Extract recipe →"}
           </button>
         </div>
       </div>
@@ -165,36 +164,40 @@ export default function AddRecipe() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
-      <div style={{ padding: '52px 16px 32px' }}>
+    <div style={{ minHeight: '100vh', background: C.paper }}>
+      <div style={{ padding: '24px 16px 32px' }}>
         <button
           onClick={() => navigate("/")}
           style={BACK_BTN}
         >
           ← Back
         </button>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#3a3226', marginBottom: '6px' }}>Add recipe</h1>
-        <p style={{ fontSize: '14px', color: '#9a9080', marginBottom: '28px' }}>Choose how you'd like to add a recipe</p>
+        <h1 style={pageTitleStyle}>Add recipe</h1>
+        <p style={subtitleStyle}>Choose how you'd like to add a recipe</p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="flex flex-col" style={{ border: BORDER }}>
           {[
-            { icon: '📷', label: 'Take a photo', sub: 'Photograph a recipe from a book or card', onClick: () => cameraRef.current.click() },
-            { icon: '🖼️', label: 'Upload screenshot', sub: 'Upload a screenshot from a website or app', onClick: () => uploadRef.current.click() },
-            { icon: '🔗', label: 'Paste a URL', sub: 'Scrape a recipe directly from a website', onClick: () => setUrlMode(true) },
-            { icon: '✏️', label: 'Enter manually', sub: 'Type in a recipe from scratch', onClick: () => navigate("/add/manual") },
-          ].map(({ icon, label, sub, onClick }) => (
+            { shape: 'circle', label: 'Take a photo', sub: 'Photograph a recipe from a book or card', onClick: () => cameraRef.current.click() },
+            { shape: 'square', label: 'Upload screenshot', sub: 'Upload a screenshot from a website or app', onClick: () => uploadRef.current.click() },
+            { shape: 'triangle', label: 'Paste a URL', sub: 'Scrape a recipe directly from a website', onClick: () => setUrlMode(true) },
+            { shape: 'ink', label: 'Enter manually', sub: 'Type in a recipe from scratch', onClick: () => navigate("/add/manual") },
+          ].map(({ shape, label, sub, onClick }, i) => (
             <button
               key={label}
               onClick={onClick}
+              className="flex items-center text-left"
               style={{
-                width: '100%', padding: '16px',
-                background: '#ffffff', border: '1px solid #d4cdc0',
-                borderRadius: '10px', textAlign: 'left', cursor: 'pointer',
+                width: '100%', gap: '14px', padding: '14px 12px',
+                background: i % 2 === 0 ? C.white : C.paper,
+                border: 'none', borderTop: i === 0 ? 'none' : BORDER,
+                borderRadius: 0, cursor: 'pointer',
               }}
             >
-              <div style={{ fontSize: '22px', marginBottom: '6px' }}>{icon}</div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#3a3226' }}>{label}</div>
-              <div style={{ fontSize: '13px', color: '#9a9080', marginTop: '3px' }}>{sub}</div>
+              <span className="flex shrink-0 items-center justify-center" style={{ width: '20px' }}><Shape kind={shape} /></span>
+              <span>
+                <span style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: C.ink }}>{label}</span>
+                <span style={{ display: 'block', fontSize: '10px', color: C.grey, marginTop: '2px' }}>{sub}</span>
+              </span>
             </button>
           ))}
         </div>

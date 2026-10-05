@@ -1,12 +1,13 @@
-const inputBase = {
-  padding: '8px 10px',
-  background: '#ffffff',
-  border: '1px solid #d4cdc0',
-  borderRadius: '10px',
-  fontSize: '14px',
-  outline: 'none',
-  color: '#3a3226',
-  minWidth: 0,
+import { C } from "./Bauhaus.jsx";
+
+const removeBtn = {
+  flexShrink: 0, width: '28px', height: '34px', fontSize: '18px', lineHeight: 1,
+  color: C.ink, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+};
+
+const addBtn = {
+  fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+  color: C.blue, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textAlign: 'left',
 };
 
 export default function IngredientList({ value = [], onChange }) {
@@ -23,41 +24,39 @@ export default function IngredientList({ value = [], onChange }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div className="flex flex-col" style={{ gap: '6px' }}>
       {value.map((ing, i) => (
-        <div key={i} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+        <div key={i} className="flex items-center" style={{ gap: '4px' }}>
           <input
             value={ing.amount}
             onChange={(e) => update(i, "amount", e.target.value)}
             placeholder="Qty"
-            style={{ ...inputBase, width: '52px', flexShrink: 0, textAlign: 'center' }}
+            aria-label="Quantity"
+            className="bh-input"
+            style={{ width: '52px', flexShrink: 0, textAlign: 'center', minWidth: 0 }}
           />
           <input
             value={ing.unit}
             onChange={(e) => update(i, "unit", e.target.value)}
             placeholder="Unit"
-            style={{ ...inputBase, width: '90px', flexShrink: 0 }}
+            aria-label="Unit"
+            className="bh-input"
+            style={{ width: '72px', flexShrink: 0, minWidth: 0 }}
           />
           <input
             value={ing.name}
             onChange={(e) => update(i, "name", e.target.value)}
             placeholder="Ingredient"
-            style={{ ...inputBase, flex: 1 }}
+            aria-label="Ingredient"
+            className="bh-input"
+            style={{ flex: 1, minWidth: 0, width: 'auto' }}
           />
-          <button
-            type="button"
-            onClick={() => remove(i)}
-            style={{ flexShrink: 0, width: '24px', fontSize: '18px', lineHeight: 1, color: '#c0b8ac', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-          >
+          <button type="button" onClick={() => remove(i)} aria-label="Remove ingredient" style={removeBtn}>
             ×
           </button>
         </div>
       ))}
-      <button
-        type="button"
-        onClick={add}
-        style={{ fontSize: '13px', color: '#9a9080', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textAlign: 'left' }}
-      >
+      <button type="button" onClick={add} style={addBtn}>
         + Add ingredient
       </button>
     </div>

@@ -10,7 +10,81 @@
   font-style: normal;
 }
 
+/* Itten / Bauhaus palette: the three primaries, paper, white and ink.
+   Every colour in the app comes from here. */
+:root {
+  --bh-paper: #f2ede0;
+  --bh-white: #ffffff;
+  --bh-ink: #0a0820;
+  --bh-red: #d42b1e;
+  --bh-yellow: #f5c800;
+  --bh-blue: #1535a8;
+  --bh-grey: #6a6a62;
+  --bh-muted: #4a4a42;
+  --bh-rule: #d0c8b8;
+}
+
+body {
+  background: var(--bh-paper);
+  color: var(--bh-ink);
+}
+
+/* Form controls can't take :focus styles inline, so they live here. */
+.bh-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bh-white);
+  border: 2px solid var(--bh-ink);
+  border-radius: 0;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--bh-ink);
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.bh-input:focus { border-color: var(--bh-red); }
+.bh-input::placeholder { color: var(--bh-grey); }
+
+.bh-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bh-grey);
+  margin-bottom: 6px;
+}
+
+.bh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid var(--bh-ink);
+  border-radius: 0;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.bh-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.bh-btn-primary { background: var(--bh-red); color: var(--bh-white); }
+.bh-btn-secondary { background: var(--bh-yellow); color: var(--bh-ink); }
+
+.bh-link { color: var(--bh-blue); text-decoration: none; }
+.bh-link:hover { text-decoration: underline; }
+
+@keyframes bh-spin { to { transform: rotate(360deg); } }
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+/* TagInput is a wrapper around a bare input, so the focus ring goes on it. */
+.bh-taginput:focus-within { border-color: var(--bh-red) !important; }
