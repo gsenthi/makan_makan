@@ -22,7 +22,7 @@ export default function App() {
         <Route path="/add/review" element={<ReviewRecipe />} />
         <Route path="/add/manual" element={<ManualEntry />} />
         <Route path="/recipe/:id" element={<RecipeView />} />
-        <Route path="/recipe/:id/edit" element={<EditRecipe />} />
+        <Route path="/recipe/:id/edit" element={<EditRecipe setBasket={setBasket} />} />
         <Route path="/basket" element={<Basket basket={basket} setBasket={setBasket} />} />
         <Route path="/shopping" element={<ShoppingList />} />
       </Routes>

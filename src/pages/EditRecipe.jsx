@@ -5,7 +5,7 @@ import RecipeForm from "../components/RecipeForm.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { C } from "../components/Bauhaus.jsx";
 
-export default function EditRecipe() {
+export default function EditRecipe({ setBasket }) {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,5 +38,13 @@ export default function EditRecipe() {
     );
   }
 
-  return <RecipeForm title="Edit recipe" initialData={recipe} id={id} />;
+  // A deleted recipe also comes out of the shopping basket.
+  return (
+    <RecipeForm
+      title="Edit recipe"
+      initialData={recipe}
+      id={id}
+      onDeleted={(deletedId) => setBasket((b) => b.filter((x) => x !== deletedId))}
+    />
+  );
 }

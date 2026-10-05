@@ -39,10 +39,11 @@ function Field({ label, children }) {
   );
 }
 
-export default function RecipeForm({ title, initialData = {}, sourceType = "manual", id = null }) {
+export default function RecipeForm({ title, initialData = {}, sourceType = "manual", id = null, onDeleted }) {
   const navigate = useNavigate();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...initialData }));
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
 
   function set(field, value) {
@@ -90,6 +91,23 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
       return;
     }
     navigate(id ? `/recipe/${id}` : "/");
+  }
+
+  async function remove() {
+    const name = initialData.name || "this recipe";
+    if (!window.confirm(`Delete "${name}"? This can't be undone.`)) return;
+    setDeleting(true);
+    setError(null);
+    // .select() returns the deleted rows, so a delete that Supabase's row-level
+    // security silently blocks shows up as an empty result instead of success.
+    const { data, error: dbError } = await supabase.from("recipes").delete().eq("id", id).select("id");
+    setDeleting(false);
+    if (dbError || !data?.length) {
+      setError(dbError?.message || "Couldn't delete this recipe. Check that the recipes table allows deletes in Supabase.");
+      return;
+    }
+    onDeleted?.(id);
+    navigate("/", { replace: true });
   }
 
   return (
@@ -219,6 +237,20 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
           {error && (
             <p style={{ fontSize: '12px', color: C.ink, background: C.white, border: `2px solid ${C.red}`, padding: '10px 12px', margin: 0 }}>{error}</p>
           )}
+
+          {id && (
+            <div style={{ borderTop: BORDER, paddingTop: '16px', marginTop: '8px' }}>
+              <button
+                type="button"
+                onClick={remove}
+                disabled={deleting || saving}
+                className="bh-btn"
+                style={{ width: '100%', background: C.white, color: C.red }}
+              >
+                {deleting ? <><LoadingSpinner small /> Deleting…</> : "Delete recipe"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -229,7 +261,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
       }}>
         <button
           onClick={save}
-          disabled={saving}
+          disabled={saving || deleting}
           className="bh-btn bh-btn-primary"
           style={{ width: '100%' }}
         >
