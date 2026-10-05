@@ -5,7 +5,10 @@ import TagInput from "./TagInput.jsx";
 import IngredientList from "./IngredientList.jsx";
 import InstructionList from "./InstructionList.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import { C, BORDER, backButtonStyle, pageTitleStyle } from "./Bauhaus.jsx";
 
+// Saved to Supabase as each new recipe's card_color. The Bauhaus UI no
+// longer displays it, but the stored value is unchanged.
 const CARD_COLORS = [
   '#2a4a3a', '#344a30', '#2e4840', '#223a2c', '#2e4a36',
   '#3a5640', '#364238', '#2a4840', '#3a4830', '#2c4e3c',
@@ -27,20 +30,10 @@ const EMPTY = {
   source_attribution: "",
 };
 
-const inputStyle = {
-  width: '100%', boxSizing: 'border-box',
-  padding: '10px 12px',
-  background: '#ffffff', border: '1px solid #d4cdc0',
-  borderRadius: '10px', fontSize: '14px',
-  outline: 'none', color: '#3a3226',
-};
-
 function Field({ label, children }) {
   return (
     <div>
-      <label style={{ display: 'block', fontSize: '11px', fontWeight: 500, color: '#9a9080', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
-        {label}
-      </label>
+      <label className="bh-label">{label}</label>
       {children}
     </div>
   );
@@ -100,15 +93,12 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
-      <div style={{ padding: '52px 16px 120px' }}>
-        <button
-          onClick={() => navigate(-1)}
-          style={{ fontSize: '13px', color: '#6a5e48', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' }}
-        >
+    <div style={{ minHeight: '100vh', background: C.paper }}>
+      <div style={{ padding: '24px 16px 110px' }}>
+        <button onClick={() => navigate(-1)} style={backButtonStyle}>
           ← Back
         </button>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#3a3226', marginBottom: '24px' }}>{title}</h1>
+        <h1 style={{ ...pageTitleStyle, paddingBottom: '10px', borderBottom: `4px solid ${C.red}`, marginBottom: '24px' }}>{title}</h1>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Field label="Recipe name *">
@@ -116,7 +106,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
               placeholder="e.g. Nasi Lemak"
-              style={inputStyle}
+              className="bh-input"
             />
           </Field>
 
@@ -124,8 +114,8 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
             <textarea
               value={form.description || ""}
               onChange={(e) => set("description", e.target.value)}
-              rows={3}
-              style={{ ...inputStyle, resize: 'none' }}
+              rows={4}
+              className="bh-input" style={{ resize: 'none' }}
             />
           </Field>
 
@@ -136,7 +126,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
                 min="0"
                 value={form.prep_time || ""}
                 onChange={(e) => set("prep_time", e.target.value)}
-                style={inputStyle}
+                className="bh-input"
               />
             </Field>
             <Field label="Cook time (min)">
@@ -145,7 +135,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
                 min="0"
                 value={form.cook_time || ""}
                 onChange={(e) => set("cook_time", e.target.value)}
-                style={inputStyle}
+                className="bh-input"
               />
             </Field>
           </div>
@@ -155,7 +145,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
               value={form.recipe_yield || ""}
               onChange={(e) => set("recipe_yield", e.target.value)}
               placeholder="e.g. 4 servings"
-              style={inputStyle}
+              className="bh-input"
             />
           </Field>
 
@@ -165,7 +155,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
                 value={form.recipe_category || ""}
                 onChange={(e) => set("recipe_category", e.target.value)}
                 placeholder="e.g. main"
-                style={inputStyle}
+                className="bh-input"
               />
             </Field>
             <Field label="Cuisine">
@@ -173,7 +163,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
                 value={form.recipe_cuisine || ""}
                 onChange={(e) => set("recipe_cuisine", e.target.value)}
                 placeholder="e.g. Malaysian"
-                style={inputStyle}
+                className="bh-input"
               />
             </Field>
           </div>
@@ -183,7 +173,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
               value={form.cooking_method || ""}
               onChange={(e) => set("cooking_method", e.target.value)}
               placeholder="e.g. Baking"
-              style={inputStyle}
+              className="bh-input"
             />
           </Field>
 
@@ -222,35 +212,28 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
               value={form.source_attribution || ""}
               onChange={(e) => set("source_attribution", e.target.value)}
               placeholder="e.g. Ottolenghi Simple p.42"
-              style={inputStyle}
+              className="bh-input"
             />
           </Field>
 
           {error && (
-            <p style={{ fontSize: '13px', color: '#c0392b' }}>{error}</p>
+            <p style={{ fontSize: '12px', color: C.ink, background: C.white, border: `2px solid ${C.red}`, padding: '10px 12px', margin: 0 }}>{error}</p>
           )}
         </div>
       </div>
 
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
-        padding: '12px 16px 32px',
-        background: '#e8e2d6', borderTop: '1px solid #d4cdc0',
+        padding: '10px 14px calc(10px + env(safe-area-inset-bottom))',
+        background: C.yellow, borderTop: BORDER,
       }}>
         <button
           onClick={save}
           disabled={saving}
-          style={{
-            width: '100%', padding: '14px',
-            background: '#2e4a38', color: '#d8ead4',
-            border: 'none', borderRadius: '10px',
-            fontSize: '15px', fontWeight: 500,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-            cursor: saving ? 'not-allowed' : 'pointer',
-            opacity: saving ? 0.6 : 1,
-          }}
+          className="bh-btn bh-btn-primary"
+          style={{ width: '100%' }}
         >
-          {saving ? <><LoadingSpinner small /> Saving…</> : id ? "Save changes" : "Save recipe"}
+          {saving ? <><LoadingSpinner small light /> Saving…</> : id ? "Save changes" : "Save recipe"}
         </button>
       </div>
     </div>

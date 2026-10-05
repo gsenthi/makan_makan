@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import RecipeForm from "../components/RecipeForm.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { C } from "../components/Bauhaus.jsx";
 
 export default function EditRecipe() {
   const { id } = useParams();
@@ -23,7 +24,7 @@ export default function EditRecipe() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#e8e2d6' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.paper }}>
         <LoadingSpinner />
       </div>
     );
@@ -31,7 +32,7 @@ export default function EditRecipe() {
 
   if (!recipe) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#e8e2d6', color: '#9a9080' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.paper, color: C.grey, fontSize: '12px' }}>
         Recipe not found
       </div>
     );

@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase.js";
 import RecipeCard from "../components/RecipeCard.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { BasketIcon, CheckIcon } from "../components/Icons.jsx";
+import { C, BORDER, BauhausHeader, TricolourStripe, Eyebrow } from "../components/Bauhaus.jsx";
 
 export default function Home({ basket, setBasket }) {
   const [recipes, setRecipes] = useState([]);
@@ -52,186 +53,129 @@ export default function Home({ basket, setBasket }) {
   });
 
   return (
-    <div style={{ minHeight: '100vh', background: '#e8e2d6' }}>
+    <div style={{ minHeight: '100vh', background: C.paper }}>
 
       {/* ── Header ─────────────────────────────────────── */}
-      <div style={{ position: 'relative', overflow: 'hidden', background: '#2c4836', padding: '56px 20px 28px' }}>
-        <div aria-hidden style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `
-            radial-gradient(ellipse at 15% 20%, rgba(100,160,100,0.18) 0%, transparent 55%),
-            radial-gradient(ellipse at 85% 85%, rgba(0,0,0,0.14) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(80,130,70,0.08) 0%, transparent 70%),
-            radial-gradient(ellipse at 40% 0%,  rgba(140,200,130,0.12) 0%, transparent 40%)
-          `,
-        }} />
-        <div aria-hidden style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.06,
-          backgroundImage: `
-            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 3px),
-            repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px)
-          `,
-        }} />
-
-        <div style={{ position: 'relative' }}>
-          <div className="flex items-start justify-between">
-            <p style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,230,200,0.45)', marginBottom: '8px' }}>
-              our recipes
-            </p>
-            <div className="flex items-center gap-1" style={{ marginTop: '-10px', marginRight: '-8px' }}>
-              <button
-                onClick={() => setSelectMode((m) => !m)}
-                aria-pressed={selectMode}
-                className="px-2 py-2"
-                style={{ fontSize: '10px', color: 'rgba(200,230,200,0.6)', letterSpacing: '0.06em', background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                {selectMode ? "Done" : "Select"}
-              </button>
-              <button
-                onClick={() => navigate("/basket")}
-                aria-label={`Basket, ${basket.length} ${basket.length === 1 ? 'recipe' : 'recipes'}`}
-                className="relative flex items-center justify-center"
-                style={{
-                  width: '36px', height: '36px', fontSize: '20px', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                  color: basket.length > 0 ? '#d8ead4' : 'rgba(200,230,200,0.5)',
-                }}
-              >
-                <BasketIcon />
-                {basket.length > 0 && (
-                  <span
-                    className="absolute flex items-center justify-center"
-                    style={{
-                      top: '3px', right: '1px', width: '16px', height: '16px', borderRadius: '50%',
-                      background: '#d8ead4', color: '#2e4a38', fontSize: '9px', fontWeight: 600, lineHeight: 1,
-                    }}
-                  >
-                    {basket.length}
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-          <h1 style={{ fontFamily: 'Djayanti, serif', fontSize: '44px', color: '#d8ead4', lineHeight: 0.9, margin: 0 }}>
-            makan<br />makan
-          </h1>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            marginTop: '12px', paddingTop: '10px',
-            borderTop: '1px solid rgba(200,230,200,0.15)',
-            fontSize: '9px', color: 'rgba(200,230,200,0.45)', letterSpacing: '0.06em',
-          }}>
-            <span>{recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}</span>
-            {cuisineCount > 0 && (
-              <>
-                <span style={{ opacity: 0.5 }}>·</span>
-                <span>{cuisineCount} {cuisineCount === 1 ? 'cuisine' : 'cuisines'}</span>
-              </>
-            )}
+      <BauhausHeader>
+        <div className="flex items-start justify-between">
+          <Eyebrow>our recipes</Eyebrow>
+          <div className="flex items-center" style={{ marginTop: '-8px', marginRight: '-4px' }}>
+            <button
+              onClick={() => setSelectMode((m) => !m)}
+              aria-pressed={selectMode}
+              style={{
+                fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                padding: '5px 10px', marginRight: '8px', borderRadius: 0, border: BORDER, cursor: 'pointer',
+                background: selectMode ? C.ink : C.paper, color: selectMode ? C.yellow : C.ink,
+              }}
+            >
+              {selectMode ? "Done" : "Select"}
+            </button>
+            <button
+              onClick={() => navigate("/basket")}
+              aria-label={`Basket, ${basket.length} ${basket.length === 1 ? 'recipe' : 'recipes'}`}
+              className="relative flex items-center justify-center"
+              style={{
+                width: '36px', height: '36px', fontSize: '22px', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                color: C.ink, opacity: basket.length > 0 ? 1 : 0.55,
+              }}
+            >
+              <BasketIcon />
+              {basket.length > 0 && (
+                <span
+                  className="absolute flex items-center justify-center"
+                  style={{
+                    top: '1px', right: '-2px', minWidth: '16px', height: '16px', padding: '0 3px', boxSizing: 'border-box',
+                    background: C.red, color: C.white, border: `1.5px solid ${C.ink}`,
+                    fontSize: '9px', fontWeight: 700, lineHeight: 1,
+                  }}
+                >
+                  {basket.length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
-      </div>
+        <h1 style={{ fontFamily: 'Djayanti, serif', fontSize: '44px', color: C.white, lineHeight: 0.9, margin: 0, fontWeight: 'normal', textShadow: '3px 3px 0 rgba(0,0,0,0.18)' }}>
+          makan<br />makan
+        </h1>
+        <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.6)', marginTop: '10px', marginBottom: 0, letterSpacing: '0.06em' }}>
+          {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
+          {cuisineCount > 0 && ` · ${cuisineCount} ${cuisineCount === 1 ? 'cuisine' : 'cuisines'}`}
+        </p>
+      </BauhausHeader>
 
-      {/* ── Octagonal tile strip ────────────────────────── */}
-      <svg width="100%" height="52" style={{ display: 'block' }} aria-hidden="true">
-        <defs>
-          <pattern id="octtile" x="0" y="0" width="26" height="26" patternUnits="userSpaceOnUse">
-            <rect width="26" height="26" fill="#a8986a" />
-            <rect x="0.5"  y="0.5"  width="4" height="4" fill="#6a8e6a" stroke="#5a7a5a" strokeWidth="0.3" />
-            <rect x="21.5" y="0.5"  width="4" height="4" fill="#6a8e6a" stroke="#5a7a5a" strokeWidth="0.3" />
-            <rect x="0.5"  y="21.5" width="4" height="4" fill="#6a8e6a" stroke="#5a7a5a" strokeWidth="0.3" />
-            <rect x="21.5" y="21.5" width="4" height="4" fill="#6a8e6a" stroke="#5a7a5a" strokeWidth="0.3" />
-            <polygon points="2,9 2,17 9,24 17,24 24,17 24,9 17,2 9,2" fill="#e8e0cc" stroke="#b8a880" strokeWidth="0.4" />
-            <polygon points="2,9 2,17 9,24 17,24 24,17 24,9 17,2 9,2" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="52" fill="url(#octtile)" />
-        <rect width="100%" height="2" fill="rgba(80,55,20,0.18)" />
-        <rect y="50" width="100%" height="2" fill="rgba(80,55,20,0.12)" />
-        <rect width="100%" height="52" fill="rgba(80,55,20,0.05)" />
-      </svg>
+      <TricolourStripe />
 
       {/* ── Selection bar ───────────────────────────────── */}
       {selectMode && (
-        <div className="flex items-center justify-between" style={{ background: '#2e4a38', padding: '6px 16px' }}>
-          <span style={{ fontSize: '9px', color: 'rgba(200,230,200,0.6)' }}>Tap recipes to add to your basket</span>
-          <span style={{ fontSize: '9px', color: '#d8ead4', fontWeight: 500 }}>{basket.length} in basket</span>
+        <div className="flex items-center justify-between" style={{ background: C.ink, padding: '6px 16px', borderBottom: BORDER }}>
+          <span style={{ fontSize: '9px', letterSpacing: '0.06em', color: C.paper }}>Tap recipes to add to your basket</span>
+          <span style={{ fontSize: '9px', letterSpacing: '0.06em', color: C.yellow, fontWeight: 700 }}>{basket.length} in basket</span>
         </div>
       )}
 
       {/* ── Search + filters ────────────────────────────── */}
-      <div style={{ padding: '16px 16px 12px' }}>
-        <div style={{ position: 'relative', marginBottom: '12px' }}>
-          <svg
-            aria-hidden="true"
-            style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
-            width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="#9a9080" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-          </svg>
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search recipes…"
-            style={{
-              width: '100%', boxSizing: 'border-box',
-              padding: '10px 12px 10px 36px',
-              background: '#ffffff', border: '1px solid #d4cdc0',
-              borderRadius: '8px', fontSize: '14px',
-              outline: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-              color: '#3a3226',
-            }}
-          />
-        </div>
+      <input
+        type="search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search recipes…"
+        aria-label="Search recipes"
+        className="bh-input"
+        style={{ margin: '12px 16px 0', width: 'calc(100% - 32px)', padding: '8px 12px' }}
+      />
 
-        {filters.length > 1 && (
-          <div className="no-scrollbar" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '2px' }}>
-            {filters.map((f) => (
+      {filters.length > 1 && (
+        <div className="no-scrollbar flex" style={{ overflowX: 'auto', padding: '8px 16px', gap: 0 }}>
+          {filters.map((f, i) => {
+            const active = activeFilter === f;
+            return (
               <button
                 key={f}
                 onClick={() => setActiveFilter(f)}
+                aria-pressed={active}
                 style={{
-                  flexShrink: 0, padding: '5px 14px', borderRadius: '20px',
-                  fontSize: '12px', cursor: 'pointer', textTransform: 'capitalize',
-                  border: `1px solid ${activeFilter === f ? 'transparent' : '#b8ae98'}`,
-                  background: activeFilter === f ? '#2e4a38' : 'transparent',
-                  color: activeFilter === f ? '#d8e8d4' : '#6a5e48',
+                  flexShrink: 0, padding: '4px 12px', fontSize: '10px', letterSpacing: '0.04em',
+                  textTransform: 'capitalize', cursor: 'pointer', borderRadius: 0,
+                  border: BORDER, borderRight: i === filters.length - 1 ? BORDER : 'none',
+                  background: active ? C.red : C.paper,
+                  color: active ? C.white : C.ink,
                 }}
               >
                 {f}
               </button>
-            ))}
-          </div>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* ── Recipe grid ─────────────────────────────────── */}
-      <div style={{ padding: '0 16px 96px' }}>
+      <div style={{ paddingBottom: '72px', marginTop: filters.length > 1 ? 0 : '12px' }}>
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '80px' }}>
+          <div className="flex justify-center" style={{ paddingTop: '80px' }}>
             <LoadingSpinner />
           </div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', paddingTop: '80px', color: '#9a9080' }}>
+          <div className="text-center" style={{ paddingTop: '80px', color: C.grey }}>
             {recipes.length === 0 ? (
               <>
-                <p style={{ fontSize: '15px', marginBottom: '4px' }}>No recipes yet</p>
-                <p style={{ fontSize: '13px' }}>Tap + to add your first recipe</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: C.ink, marginBottom: '4px' }}>No recipes yet</p>
+                <p style={{ fontSize: '11px' }}>Tap + to add your first recipe</p>
               </>
             ) : (
-              <p style={{ fontSize: '13px' }}>No recipes match your search</p>
+              <p style={{ fontSize: '11px' }}>No recipes match your search</p>
             )}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+          <div className="grid grid-cols-2" style={{ gap: 0, borderTop: BORDER }}>
             {filtered.map((recipe, i) => {
               const inBasket = basket.includes(recipe.id);
               return (
                 <div
                   key={recipe.id}
                   className="relative"
-                  style={{ borderRadius: '6px', outline: inBasket ? '2px solid #d8ead4' : 'none' }}
+                  style={{ outline: inBasket ? `3px solid ${C.blue}` : 'none', outlineOffset: '-3px' }}
                 >
                   <RecipeCard
                     recipe={recipe}
@@ -242,7 +186,7 @@ export default function Home({ basket, setBasket }) {
                     <span
                       aria-label="In basket"
                       className="absolute flex items-center justify-center pointer-events-none"
-                      style={{ top: '6px', right: '6px', width: '14px', height: '14px', borderRadius: '50%', background: '#d8ead4', color: '#2e4a38', fontSize: '10px' }}
+                      style={{ top: '8px', right: '8px', width: '16px', height: '16px', background: C.blue, color: C.white, fontSize: '11px' }}
                     >
                       <CheckIcon strokeWidth={3} />
                     </span>
@@ -254,21 +198,26 @@ export default function Home({ basket, setBasket }) {
         )}
       </div>
 
-      {/* ── FAB ─────────────────────────────────────────── */}
-      <button
-        onClick={() => navigate("/add")}
-        aria-label="Add recipe"
-        style={{
-          position: 'fixed', bottom: '24px', right: '24px',
-          width: '48px', height: '48px',
-          background: '#2e4a38', color: '#d8ead4',
-          borderRadius: '50%', border: 'none', fontSize: '24px', lineHeight: 1,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(20,40,25,0.3)', cursor: 'pointer',
-        }}
+      {/* ── Bottom bar ──────────────────────────────────── */}
+      <div
+        className="fixed bottom-0 left-0 right-0 flex items-center justify-between"
+        style={{ borderTop: BORDER, background: C.yellow, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))' }}
       >
-        +
-      </button>
+        <button
+          onClick={() => navigate("/add")}
+          style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.ink, background: 'none', border: 'none', cursor: 'pointer', padding: '8px 0' }}
+        >
+          Add recipe
+        </button>
+        <button
+          onClick={() => navigate("/add")}
+          aria-label="Add recipe"
+          className="flex items-center justify-center"
+          style={{ width: '34px', height: '34px', background: C.ink, border: 'none', borderRadius: 0, color: C.yellow, fontSize: '20px', lineHeight: 1, cursor: 'pointer', padding: 0 }}
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }
