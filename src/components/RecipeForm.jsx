@@ -44,6 +44,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
   const [form, setForm] = useState(() => ({ ...EMPTY, ...initialData }));
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [error, setError] = useState(null);
 
   function set(field, value) {
@@ -93,9 +94,14 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
     navigate(id ? `/recipe/${id}` : "/");
   }
 
+  // Two taps instead of window.confirm: some mobile browsers (notably in-app
+  // ones) never show native dialogs, which made the button look dead.
   async function remove() {
-    const name = initialData.name || "this recipe";
-    if (!window.confirm(`Delete "${name}"? This can't be undone.`)) return;
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      return;
+    }
+    setConfirmingDelete(false);
     setDeleting(true);
     setError(null);
     // .select() returns the deleted rows, so a delete that Supabase's row-level
@@ -112,7 +118,7 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
 
   return (
     <div style={{ minHeight: '100vh', background: C.paper }}>
-      <div style={{ padding: '24px 16px 110px' }}>
+      <div style={{ padding: '24px 16px calc(120px + env(safe-area-inset-bottom))' }}>
         <button onClick={() => navigate(-1)} style={backButtonStyle}>
           ← Back
         </button>
@@ -240,15 +246,36 @@ export default function RecipeForm({ title, initialData = {}, sourceType = "manu
 
           {id && (
             <div style={{ borderTop: BORDER, paddingTop: '16px', marginTop: '8px' }}>
-              <button
-                type="button"
-                onClick={remove}
-                disabled={deleting || saving}
-                className="bh-btn"
-                style={{ width: '100%', background: C.white, color: C.red }}
-              >
-                {deleting ? <><LoadingSpinner small /> Deleting…</> : "Delete recipe"}
-              </button>
+              {confirmingDelete && (
+                <p style={{ fontSize: '12px', color: C.ink, margin: '0 0 10px' }}>
+                  Delete "{initialData.name || "this recipe"}"? This can't be undone.
+                </p>
+              )}
+              <div className="flex" style={{ gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={remove}
+                  disabled={deleting || saving}
+                  className="bh-btn"
+                  style={{
+                    flex: 1,
+                    background: confirmingDelete ? C.red : C.white,
+                    color: confirmingDelete ? C.white : C.red,
+                  }}
+                >
+                  {deleting ? <><LoadingSpinner small /> Deleting…</> : confirmingDelete ? "Yes, delete" : "Delete recipe"}
+                </button>
+                {confirmingDelete && (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingDelete(false)}
+                    className="bh-btn"
+                    style={{ background: C.paper, color: C.ink }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
